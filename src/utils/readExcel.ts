@@ -2,6 +2,15 @@ import path from "path";
 import fs from "fs";
 import readXlsxFile from "read-excel-file/node";
 
+const schema = {
+  utm_source: { prop: "utmSource", type: String },
+  utm_campaign: { prop: "utmCampaign", type: String },
+  utm_medium: { prop: "utmMedium", type: String },
+  utm_content: { prop: "utmContent", type: String },
+  sessionId: { prop: "sessionId", type: String },
+  createdAt: { prop: "createdAt", type: String },
+};
+
 export async function readExcelData() {
   const filePath = path.resolve(__dirname, "../data/data.xlsx");
 
@@ -9,6 +18,17 @@ export async function readExcelData() {
     throw new Error("Arquivo não encontrado");
   }
 
-  const rows = await readXlsxFile(filePath);
-  console.log(rows);
+  const { rows, errors } = await readXlsxFile(filePath, { schema });
+
+  const parsedRows = rows.map((row) => ({
+    ...row,
+    createdAt:
+      typeof row.createdAt === "string" ? new Date(row.createdAt) : null,
+  }));
+
+  if (errors.length > 0) {
+    console.error("Erros ao ler dados da planilha:", errors);
+  }
+
+  return parsedRows;
 }

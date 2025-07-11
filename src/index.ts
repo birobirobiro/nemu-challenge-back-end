@@ -2,7 +2,7 @@ import express from "express";
 import journeysRouter from "./routes/journeys";
 
 const app = express();
-const port = 3000;
+const port = 3333;
 
 app.use("/journeys", journeysRouter);
 

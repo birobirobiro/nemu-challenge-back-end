@@ -1,14 +1,15 @@
 import { Router } from "express";
-import { readExcelData } from "../utils/readExcel";
+import { getProcessedJourneys } from "../services/journeyService";
+import { Journey } from "../types/journey";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
   try {
-    const data = await readExcelData();
+    const data: Journey[] = await getProcessedJourneys();
     res.json(data);
   } catch (err) {
-    res.status(500).json({ error: "Erro ao ler a planilha" });
+    res.status(500).json({ error: "Erro ao processar as jornadas" });
   }
 });
 

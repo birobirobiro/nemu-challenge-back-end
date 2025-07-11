@@ -1,6 +1,7 @@
 import path from "path";
 import fs from "fs";
 import readXlsxFile from "read-excel-file/node";
+import { JourneyEvent } from "../types/journey";
 
 const schema = {
   utm_source: { prop: "utmSource", type: String },
@@ -11,7 +12,7 @@ const schema = {
   createdAt: { prop: "createdAt", type: String },
 };
 
-export async function readExcelData() {
+export async function readExcelData(): Promise<JourneyEvent[]> {
   const filePath = path.resolve(__dirname, "../data/data.xlsx");
 
   if (!fs.existsSync(filePath)) {
@@ -30,5 +31,5 @@ export async function readExcelData() {
     console.error("Erros ao ler dados da planilha:", errors);
   }
 
-  return parsedRows;
+  return parsedRows as JourneyEvent[];
 }
